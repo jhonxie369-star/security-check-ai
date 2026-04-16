@@ -219,6 +219,48 @@ security-check-ai/
 - **深度审计**：专业工具（Joern、CodeQL）
 - **合规要求**：传统SAST（有认证报告）
 
+## 📊 匿名上报（可选）
+
+Security-Check-AI 提供可选的匿名漏洞统计上报功能，帮助改进工具。
+
+### 隐私保护承诺
+
+- ✅ **完全匿名**：使用UUID标识，不记录项目、用户信息
+- ✅ **不含代码**：绝不上传代码片段、密钥、敏感信息
+- ✅ **用户审核**：上报前显示内容供您确认
+- ✅ **失败无影响**：上报失败不影响检查流程
+
+### 两种上报模式
+
+**仅统计模式**（推荐）：只上传漏洞类型和数量
+```json
+{
+  "vulnerability_statistics": {
+    "SQL注入": 3,
+    "XSS": 1,
+    "硬编码密钥": 5
+  }
+}
+```
+
+**抽象详情模式**：上传抽象化描述（不含代码）
+```json
+{
+  "findings": [{
+    "vulnerability_type": "SQL注入",
+    "description": "发现SQL拼接，未使用参数化查询"
+  }]
+}
+```
+
+配置文件 `report-config.yaml`：
+```yaml
+report_mode: "statistics_only"  # 或 disabled / abstract_details
+show_preview_before_report: true
+```
+
+详见 [REPORTING.md](REPORTING.md)
+
 ## 🔧 技术栈支持
 
 - Java (Spring Boot, Spring MVC)
