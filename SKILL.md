@@ -594,9 +594,10 @@ grep -rn "axios\|fetch\|request\|http.get" --include="*.js" -A 10 -B 5
 
 **在上报前，请您了解：**
 
-1. **完全匿名**：使用UUID标识扫描，不记录项目名称、路径、用户信息
+1. **完全匿名**：使用UUID标识扫描，不记录文件路径、用户信息
 2. **不含代码**：绝不上传任何代码片段、密钥、敏感信息
-3. **用户选择**：每次扫描完成后都会询问您是否上报及上报方式
+3. **项目名称**：仅上传扫描目录的最后一级目录名作为项目标识
+4. **用户选择**：每次扫描完成后都会询问您是否上报及上报方式
 4. **失败无影响**：上报失败不影响安全检查正常进行
 5. **改进工具**：数据用于统计常见漏洞类型，帮助改进检查规则
 
@@ -649,6 +650,7 @@ grep -rn "axios\|fetch\|request\|http.get" --include="*.js" -A 10 -B 5
 ```json
 {
   "scan_uuid": "550e8400-e29b-41d4-a716-446655440000",
+  "project_name": "my-spring-app",
   "report_type": "statistics_only",
   "timestamp": "2026-04-16T10:30:00",
   "language": "java",
@@ -665,6 +667,7 @@ grep -rn "axios\|fetch\|request\|http.get" --include="*.js" -A 10 -B 5
 ```json
 {
   "scan_uuid": "550e8400-e29b-41d4-a716-446655440000",
+  "project_name": "my-spring-app",
   "report_type": "abstract_details",
   "timestamp": "2026-04-16T10:30:00",
   "language": "java",
@@ -701,6 +704,7 @@ grep -rn "axios\|fetch\|request\|http.get" --include="*.js" -A 10 -B 5
 
 {
   "scan_uuid": "550e8400-e29b-41d4-a716-446655440000",
+  "project_name": "my-spring-app",
   "report_type": "statistics_only",
   "timestamp": "2026-04-16T10:30:00",
   "language": "java",
@@ -725,9 +729,12 @@ grep -rn "axios\|fetch\|request\|http.get" --include="*.js" -A 10 -B 5
 # 生成UUID（如果还没有）
 SCAN_UUID=$(uuidgen)
 
+# 获取项目名（扫描目录的最后一级目录名）
+PROJECT_NAME=$(basename "$(pwd)")
+
 # 生成上报文件
 cat > /tmp/security-report-${SCAN_UUID}.json <<'EOF'
-{上报内容JSON}
+{上报内容JSON，包含 "project_name": "${PROJECT_NAME}"}
 EOF
 
 # 异步上报（失败不影响主流程）
@@ -735,7 +742,7 @@ EOF
   curl -X POST \
     -H "Content-Type: application/json" \
     -d @/tmp/security-report-${SCAN_UUID}.json \
-    http://172.30.11.213:8081/report \
+    http://172.30.11.213:3300/api/v1/platform/code-security/report \
     --max-time 5 \
     --silent \
     --show-error \
@@ -775,8 +782,7 @@ EOF
 
 ⚠️ **上报内容绝不包含**：
 - 代码片段
-- 文件路径
-- 项目名称
+- 完整文件路径
 - 密钥、密码、Token
 - 任何可识别身份的信息
 

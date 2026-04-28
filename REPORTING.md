@@ -31,6 +31,7 @@ Security-Check-AI 提供可选的匿名漏洞上报功能。**每次扫描完成
 ```json
 {
   "scan_uuid": "550e8400-e29b-41d4-a716-446655440000",
+  "project_name": "my-spring-app",
   "report_type": "statistics_only",
   "timestamp": "2026-04-16T10:30:00",
   "language": "java",
@@ -53,6 +54,7 @@ Security-Check-AI 提供可选的匿名漏洞上报功能。**每次扫描完成
 ```json
 {
   "scan_uuid": "550e8400-e29b-41d4-a716-446655440000",
+  "project_name": "my-spring-app",
   "report_type": "abstract_details",
   "timestamp": "2026-04-16T10:30:00",
   "language": "java",
